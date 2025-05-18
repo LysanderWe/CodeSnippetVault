@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.add-snippet {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.add-snippet h2 {
+    margin-bottom: 20px;
+    color: #667eea;
+}
+
+#snippet-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#snippet-form input,
+#snippet-form select,
+#snippet-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#snippet-form textarea {
+    min-height: 150px;
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+}
+
+#snippet-form button {
+    padding: 12px 24px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+#snippet-form button:hover {
+    background: #5a6fd8;
+}
+
+.snippets-list {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.snippets-list h2 {
+    margin-bottom: 20px;
+    color: #667eea;
+}
+
+.snippet-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: transform 0.2s;
+}
+
+.snippet-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.snippet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.snippet-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.snippet-language {
+    background: #667eea;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.snippet-code {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.snippet-tags {
+    margin-top: 10px;
+}
+
+.tag {
+    background: #e9ecef;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+.snippet-actions {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.snippet-actions button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-btn {
+    background: #28a745;
+    color: white;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+}

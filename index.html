@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSnippetVault</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CodeSnippetVault</h1>
+            <p>Manage and share your code snippets</p>
+        </header>
+
+        <main>
+            <section class="add-snippet">
+                <h2>Add New Snippet</h2>
+                <form id="snippet-form">
+                    <input type="text" id="title" placeholder="Snippet title" required>
+                    <select id="language">
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                    </select>
+                    <textarea id="code" placeholder="Enter your code here..." required></textarea>
+                    <input type="text" id="tags" placeholder="Tags (comma separated)">
+                    <button type="submit">Save Snippet</button>
+                </form>
+            </section>
+
+            <section class="snippets-list">
+                <h2>Your Snippets</h2>
+                <div id="snippets-container">
+                    <!-- Snippets will be dynamically added here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
