@@ -199,6 +199,11 @@ header p {
     color: white;
 }
 
+.edit-btn {
+    background: #28a745;
+    color: white;
+}
+
 .delete-btn {
     background: #dc3545;
     color: white;
@@ -221,4 +226,118 @@ header p {
     padding: 15px;
     border-radius: 4px;
     overflow-x: auto;
+}
+
+/* Data Management */
+.data-management {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.data-management h3 {
+    margin: 0 0 15px 0;
+    color: #495057;
+    font-size: 1rem;
+}
+
+.data-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.data-actions button,
+.import-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#export-btn {
+    background: #17a2b8;
+    color: white;
+}
+
+.import-btn {
+    background: #6f42c1;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        padding: 20px 0;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .add-snippet,
+    .snippets-list {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .search-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-controls input,
+    .search-controls select {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .snippet-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .snippet-actions button {
+        flex: 1;
+        min-width: 60px;
+    }
+
+    .snippet-code pre {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .snippet-card {
+        padding: 15px;
+    }
+
+    .snippet-title {
+        font-size: 1rem;
+    }
+
+    .snippet-actions {
+        flex-direction: column;
+    }
+
+    .snippet-actions button {
+        width: 100%;
+        margin: 2px 0;
+    }
 }

@@ -2,6 +2,7 @@ class CodeSnippetVault {
     constructor() {
         this.snippets = JSON.parse(localStorage.getItem('snippets')) || [];
         this.filteredSnippets = [...this.snippets];
+        this.editingId = null;
         this.init();
     }
 
@@ -17,9 +18,18 @@ class CodeSnippetVault {
         // Search and filter events
         const searchInput = document.getElementById('search-input');
         const languageFilter = document.getElementById('language-filter');
+        const tagFilter = document.getElementById('tag-filter');
 
         searchInput.addEventListener('input', () => this.applyFilters());
         languageFilter.addEventListener('change', () => this.applyFilters());
+        tagFilter.addEventListener('input', () => this.applyFilters());
+
+        // Data management events
+        const exportBtn = document.getElementById('export-btn');
+        const importFile = document.getElementById('import-file');
+
+        exportBtn.addEventListener('click', () => this.exportData());
+        importFile.addEventListener('change', (e) => this.importData(e));
     }
 
     handleSubmit(e) {
@@ -35,18 +45,32 @@ class CodeSnippetVault {
             return;
         }
 
-        const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()) : [];
+        const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
-        const snippet = {
-            id: Date.now(),
-            title,
-            language,
-            code,
-            tags,
-            createdAt: new Date().toISOString()
-        };
+        if (this.editingId) {
+            // Update existing snippet
+            const snippet = {
+                id: this.editingId,
+                title,
+                language,
+                code,
+                tags,
+                updatedAt: new Date().toISOString()
+            };
+            this.updateSnippet(snippet);
+        } else {
+            // Add new snippet
+            const snippet = {
+                id: Date.now(),
+                title,
+                language,
+                code,
+                tags,
+                createdAt: new Date().toISOString()
+            };
+            this.addSnippet(snippet);
+        }
 
-        this.addSnippet(snippet);
         this.clearForm();
     }
 
@@ -54,6 +78,30 @@ class CodeSnippetVault {
         this.snippets.unshift(snippet);
         this.saveSnippets();
         this.applyFilters();
+    }
+
+    updateSnippet(updatedSnippet) {
+        const index = this.snippets.findIndex(snippet => snippet.id === updatedSnippet.id);
+        if (index !== -1) {
+            updatedSnippet.createdAt = this.snippets[index].createdAt;
+            this.snippets[index] = updatedSnippet;
+            this.saveSnippets();
+            this.applyFilters();
+        }
+    }
+
+    editSnippet(id) {
+        const snippet = this.snippets.find(s => s.id === id);
+        if (!snippet) return;
+
+        document.getElementById('title').value = snippet.title;
+        document.getElementById('language').value = snippet.language;
+        document.getElementById('code').value = snippet.code;
+        document.getElementById('tags').value = snippet.tags.join(', ');
+
+        this.editingId = id;
+        const submitBtn = document.querySelector('#snippet-form button[type="submit"]');
+        submitBtn.textContent = 'Update Snippet';
     }
 
     deleteSnippet(id) {
@@ -70,11 +118,15 @@ class CodeSnippetVault {
 
     clearForm() {
         document.getElementById('snippet-form').reset();
+        this.editingId = null;
+        const submitBtn = document.querySelector('#snippet-form button[type="submit"]');
+        submitBtn.textContent = 'Save Snippet';
     }
 
     applyFilters() {
         const searchTerm = document.getElementById('search-input').value.toLowerCase();
         const languageFilter = document.getElementById('language-filter').value;
+        const tagFilter = document.getElementById('tag-filter').value.toLowerCase();
 
         this.filteredSnippets = this.snippets.filter(snippet => {
             const matchesSearch = searchTerm === '' ||
@@ -83,7 +135,10 @@ class CodeSnippetVault {
 
             const matchesLanguage = languageFilter === '' || snippet.language === languageFilter;
 
-            return matchesSearch && matchesLanguage;
+            const matchesTag = tagFilter === '' ||
+                snippet.tags.some(tag => tag.toLowerCase().includes(tagFilter));
+
+            return matchesSearch && matchesLanguage && matchesTag;
         });
 
         this.renderSnippets();
@@ -117,6 +172,14 @@ class CodeSnippetVault {
             });
         });
 
+        // Bind edit events
+        container.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(e.target.dataset.id);
+                this.editSnippet(id);
+            });
+        });
+
         // Bind copy events
         container.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -141,6 +204,7 @@ class CodeSnippetVault {
                 <div class="snippet-tags">${tagsHTML}</div>
                 <div class="snippet-actions">
                     <button class="copy-btn" data-code="${this.escapeHTML(snippet.code)}">Copy</button>
+                    <button class="edit-btn" data-id="${snippet.id}">Edit</button>
                     <button class="delete-btn" data-id="${snippet.id}">Delete</button>
                 </div>
             </div>
@@ -171,6 +235,62 @@ class CodeSnippetVault {
         setTimeout(() => {
             notification.remove();
         }, 2000);
+    }
+
+    exportData() {
+        const dataStr = JSON.stringify(this.snippets, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `snippets-${new Date().toISOString().split('T')[0]}.json`;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        this.showNotification('Snippets exported successfully!');
+    }
+
+    importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedData = JSON.parse(e.target.result);
+
+                if (!Array.isArray(importedData)) {
+                    throw new Error('Invalid format');
+                }
+
+                // Simple validation
+                const isValid = importedData.every(snippet =>
+                    snippet.hasOwnProperty('title') &&
+                    snippet.hasOwnProperty('code') &&
+                    snippet.hasOwnProperty('language')
+                );
+
+                if (!isValid) {
+                    throw new Error('Invalid snippet structure');
+                }
+
+                if (confirm(`Import ${importedData.length} snippets? This will replace existing data.`)) {
+                    this.snippets = importedData;
+                    this.saveSnippets();
+                    this.applyFilters();
+                    this.showNotification('Snippets imported successfully!');
+                }
+
+            } catch (error) {
+                console.error('Import error:', error);
+                this.showNotification('Failed to import: Invalid file format');
+            }
+        };
+
+        reader.readAsText(file);
+        event.target.value = '';
     }
 }
 

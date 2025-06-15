@@ -31,6 +31,16 @@
                     <input type="text" id="tags" placeholder="Tags (comma separated)">
                     <button type="submit">Save Snippet</button>
                 </form>
+                <div class="data-management">
+                    <h3>Data Management</h3>
+                    <div class="data-actions">
+                        <button id="export-btn">Export Snippets</button>
+                        <label for="import-file" class="import-btn">
+                            Import Snippets
+                            <input type="file" id="import-file" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                </div>
             </section>
 
             <section class="snippets-list">
